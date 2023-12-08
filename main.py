@@ -25,17 +25,29 @@ class Name(Field):
     pass
 
 class Phone(Field):
-    def __init__(self, value):
-        if not value.isdigit() or len(value) != 10:
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, new_value):
+        if not new_value.isdigit() or len(new_value) != 10:
             raise ValueError("Invalid phone number format")
-        super().__init__(value)
+        self._value = new_value
 
 class Birthday(Field):
-    def validate(self, value):
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, new_value):
+        # Валідація формату дати народження
         try:
-            datetime.strptime(value, "%Y-%m-%d")
+            datetime.strptime(new_value, "%Y-%m-%d")
         except ValueError:
             raise ValueError("Invalid birthday format (use YYYY-MM-DD)")        
+        self._value = new_value
 
 class Record:
     def __init__(self, name, birthday=None):
@@ -104,5 +116,3 @@ class AddressBook(UserDict):
         query = query.lower()
         matching_records = [record for record in self.data.values() if query in record.name.value.lower()]
         return matching_records
-
-
