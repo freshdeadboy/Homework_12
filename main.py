@@ -42,7 +42,6 @@ class Birthday(Field):
 
     @value.setter
     def value(self, new_value):
-        # Валідація формату дати народження
         try:
             datetime.strptime(new_value, "%Y-%m-%d")
         except ValueError:
